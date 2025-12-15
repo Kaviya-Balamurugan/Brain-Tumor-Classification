@@ -3,11 +3,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 from sklearn.metrics import confusion_matrix, classification_report
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
+import os
 
 IMAGE_SIZE = 224
 BATCH_SIZE = 8
-
-# ⚠️ Same dataset path used in training
 DATASET_PATH = "/tmp/tmpxs769cm6/Training"
 
 def evaluate():
@@ -29,12 +28,12 @@ def evaluate():
     y_true = val_gen.classes
     class_labels = list(val_gen.class_indices.keys())
 
-    # Classification report
     print("\nClassification Report:\n")
     print(classification_report(y_true, y_pred, target_names=class_labels))
 
-    # Confusion matrix
     cm = confusion_matrix(y_true, y_pred)
+
+    os.makedirs("results", exist_ok=True)
 
     plt.figure(figsize=(6, 5))
     plt.imshow(cm, cmap="Blues")
@@ -51,6 +50,7 @@ def evaluate():
             plt.text(j, i, cm[i, j], ha="center", va="center")
 
     plt.tight_layout()
+    plt.savefig("results/confusion_matrix.png")
     plt.show()
 
 if __name__ == "__main__":
